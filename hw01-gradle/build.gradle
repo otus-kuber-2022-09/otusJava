@@ -2,17 +2,21 @@ plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow'
 }
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
 
 dependencies {
     implementation 'com.google.guava:guava'
 }
 
 shadowJar {
-    archiveBaseName.set('gradleHelloWorld')
+    archiveBaseName.set('hw01HelloWorld')
     archiveVersion.set('0.1')
     archiveClassifier.set('')
     manifest {
-        attributes 'Main-Class': 'ru.otus.App'
+        attributes 'Main-Class': 'ru.task.HelloOtus'
     }
 }
 
