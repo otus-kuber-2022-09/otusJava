@@ -12,9 +12,9 @@ import java.util.List;
 //Не совсем ясно с фразой "для каждой такой "тройки" надо создать СВОЙ объект класса-теста." Первоначально реализованно через метод before. После добавлено обнуление всех полей через fields. Если это не нужно, можно не учитывать
 public class TestRun {
 
-    private static final String beforeConst = "ru.hw.anotations.Before";
-    private static final String afterConst = "ru.hw.anotations.After";
-    private static final String testConst = "ru.hw.anotations.Test";
+    private static final String beforeConst = "Before";
+    private static final String afterConst = "After";
+    private static final String testConst = "Test";
 
     private static Method before;
     private static Method after;
@@ -48,8 +48,8 @@ public class TestRun {
             }
 
         });
-        System.out.println("Success: " + successfully + " test.");
-        System.out.println("Error: " + error + " test.");
+        System.out.println("Success test: " + successfully);
+        System.out.println("Error test: " + error);
     }
 
     private static void runBefore() throws InvocationTargetException, IllegalAccessException {
@@ -84,7 +84,7 @@ public class TestRun {
                 throw new ClassNotFoundException("Я не предусматривал возможности нескольких аннотаций");
             }
             Class<? extends Annotation> cl = annotations[0].annotationType();
-            switch (cl.getCanonicalName()) {
+            switch (cl.getSimpleName()) {
                 case (testConst) -> test.add(method);
                 case (afterConst) -> {
                     if (after == null) {

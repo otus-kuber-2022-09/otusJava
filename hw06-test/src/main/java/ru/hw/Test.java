@@ -26,7 +26,8 @@ public class Test {
 
     @ru.hw.anotations.Test
     public static void test3() {
-        System.out.println(classForTest.getCount());
+        classForTest.plus(5);
+        classForTest.plus(8);
     }
 
     @After
