@@ -22,15 +22,31 @@ public class TestRun {
     private static Field[] fields;
     private static Integer successfully = 0;
     private static Integer error = 0;
+    private static Object instance;
+    //клас в котором производятся тесты
+    private static Class<?> clazz;
 
     public static void startTests(String nameOfClass) throws ClassNotFoundException {
-        findAnnotationsAndFields(Class.forName(nameOfClass));
+        clazz =  Class.forName(nameOfClass);
+        findAnnotationsAndFields();
         runTests();
     }
+
+    private static void createInstance(){
+
+        try {
+            instance = clazz.getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println("Не удалось создать инстанс объекта");
+            e.printStackTrace();
+        }
+    }
+
 
     private static void runTests() {
         test.forEach(e -> {
             try {
+                createInstance();
                 setFields();
                 runBefore();
                 runTest(e);
@@ -52,30 +68,30 @@ public class TestRun {
         System.out.println("Error test: " + error);
     }
 
-    private static void runBefore() throws InvocationTargetException, IllegalAccessException {
-        before.invoke(TestRun.class);
+    private static void runBefore() throws InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+        before.invoke(instance);
     }
 
     private static void runAfter() throws InvocationTargetException, IllegalAccessException {
-        after.invoke(TestRun.class);
+        after.invoke(instance);
     }
 
     private static void runTest(Method method) throws InvocationTargetException, IllegalAccessException {
-        method.invoke(TestRun.class);
+        method.invoke(instance);
     }
 
     private static void setFields() {
         Arrays.stream(fields).forEach(e -> {
             try {
                 e.setAccessible(true);
-                e.set(null, null);
-            } catch (IllegalAccessException ex) {
+                e.set(Class.forName(e.getDeclaringClass().getName()).getDeclaredConstructor().newInstance(), null);
+            } catch (IllegalAccessException | ClassNotFoundException | InstantiationException | NoSuchMethodException | InvocationTargetException ex) {
                 ex.printStackTrace();
             }
         });
     }
 
-    private static void findAnnotationsAndFields(Class<?> clazz) throws ClassNotFoundException {
+    private static void findAnnotationsAndFields() throws ClassNotFoundException {
         fields = clazz.getDeclaredFields();
 
         for (Method method : clazz.getDeclaredMethods()) {
