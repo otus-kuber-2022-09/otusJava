@@ -1,31 +1,33 @@
 package ru.hw;
 
-import ru.hw.anotations.*;
+import ru.hw.anotations.After;
+import ru.hw.anotations.Before;
+import ru.hw.anotations.Test;
 
-public class Test {
+public class TestExample {
 
-    private static ClassForTest classForTest;
+    private ClassForTest classForTest;
 
     @Before
-    public static void init() {
+    public void init() {
         classForTest = new ClassForTest(1);
     }
 
     //Упадет
-    @ru.hw.anotations.Test
-    public static void test1() {
+    @Test
+    public void test1() {
         classForTest.setCount(null);
         classForTest.plus(1);
     }
 
-    @ru.hw.anotations.Test
-    public static void test2() {
+    @Test
+    public void test2() {
         classForTest.setCount(5);
         classForTest.plus(1);
     }
 
-    @ru.hw.anotations.Test
-    public static void test3() {
+    @Test
+    public void test3() {
         classForTest.plus(5);
         classForTest.plus(8);
     }
